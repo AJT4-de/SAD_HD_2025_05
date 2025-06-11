@@ -1,62 +1,71 @@
 package SOLID;
-
+ 
 public class LSP_01 {
+ 
+    // Liskov Substitution Principle (LSP) Example
+    public static abstract class Shape {
+        public abstract int getArea();
+    }
+ 
 
-    /*
-     * TASK:
-     * (classical example)
-     *
-     * The Square class does not behave like a Rectangle when
-     * setting the width and/or height. Please fix this to obey
-     * the LSP (Liskov Substitution Principle).
-     */
-    
-    public static class Rectangle {
-        protected int width;
-        protected int height;
-
+    public static class Rectangle extends Shape {
+        protected final int width; 
+        protected final int height; 
+ 
         public Rectangle(int width, int height) {
-            setWidth(width);
-            setHeight(height);
-        }
-
-        public void setWidth(int width) {
             this.width = width;
-        }
-
-        public void setHeight(int height) {
             this.height = height;
         }
-
+ 
+        public int getWidth() {
+            return width;
+        }
+ 
+        public int getHeight() {
+            return height;
+        }
+ 
+        @Override
         public int getArea() {
             return width * height;
         }
     }
-
-    public static class Square extends Rectangle {
-        public Square(int width) {
-            super(width, width);
+ 
+    public static class Square extends Shape {
+        protected final int side; 
+ 
+        public Square(int side) {
+            this.side = side;
         }
-
-        @Override
-        public void setWidth(int width) {
-            this.width = width;
-            this.height = width;
+ 
+        public int getSide() {
+            return side;
         }
-
+ 
         @Override
-        public void setHeight(int height) {
-            this.width = height;
-            this.height = height;
+        public int getArea() {
+            return side * side;
         }
     }
-
+ 
+    public static void printAreaDetails(Shape shape) {
+        if (shape instanceof Rectangle) {
+            Rectangle r = (Rectangle) shape;
+            System.out.println("Rectangle (" + r.getWidth() + "x" + r.getHeight() + ") Area: " + shape.getArea());
+        } else if (shape instanceof Square) {
+            Square s = (Square) shape;
+            System.out.println("Square (side " + s.getSide() + ") Area: " + shape.getArea());
+        } else {
+            System.out.println("Unknown Shape Area: " + shape.getArea());
+        }
+    }
+ 
     public static void main(String[] args) {
-        Rectangle rectangle = new Rectangle(5, 10);
-        System.out.println("Rectangle Area: " + rectangle.getArea());
-
-        Square square = new Square(0);
-        square.setWidth(5);
-        System.out.println("Square Area: " + square.getArea());
+        Shape rectangle = new Rectangle(5, 10);
+        Shape square = new Square(5);
+ 
+        printAreaDetails(rectangle);
+        printAreaDetails(square);
+ 
     }
 }

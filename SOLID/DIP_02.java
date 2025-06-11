@@ -1,40 +1,57 @@
 package SOLID;
-
+ 
 public class DIP_02 {
-
-    /*
-     * TASK:
-     * The class Employee violates the DIP (Dependency Inversion Principle).
-     * Fix this!
-     */
-    
-    public static interface Notification {
-        void doNotify();
+ 
+    // Dependency Inversion Principle (DIP) Example
+    public interface NotificationService { 
+        void sendNotification(String employeeName, String message);
     }
-
-    public static class EmailNotification implements Notification {
+ 
+    public static class EmailNotificationService implements NotificationService {
         @Override
-        public void doNotify() {
-            System.out.println("Sending notification via email!");
+        public void sendNotification(String employeeName, String message) {
+            System.out.println("Sending email to " + employeeName + ": " + message);
         }
     }
-
-    public static class Employee {
-        private EmailNotification emailNotification;
-
-        // Dependency Injection (again) composition
-        public Employee(EmailNotification emailNotification) {
-            this.emailNotification = emailNotification;
+ 
+    public static class SMSNotificationService implements NotificationService {
+        @Override
+        public void sendNotification(String employeeName, String message) {
+            System.out.println("Sending SMS to " + employeeName + ": " + message);
         }
+    }
+ 
     
-        public void notifyEmployee() {
-            emailNotification.doNotify();
+    public static class Employee {
+        private String name;
+        private NotificationService notificationService; 
+ 
+        public Employee(String name, NotificationService notificationService) {
+            this.name = name;
+            this.notificationService = notificationService;
+        }
+ 
+        public void requestBonus() {
+         
+            System.out.println("Bonus requested for " + name);
+          
+            notificationService.sendNotification(this.name, "Your bonus request has been submitted.");
+        }
+ 
+        public String getName() {
+            return name;
         }
     }
-
+ 
     public static void main(String[] args) {
-        EmailNotification emailNotification = new EmailNotification();
-        Employee employee = new Employee(emailNotification);
-        employee.notifyEmployee();
+        NotificationService emailService = new EmailNotificationService();
+        Employee employee1 = new Employee("Peter", emailService);
+        employee1.requestBonus();
+ 
+        System.out.println("---");
+ 
+        NotificationService smsService = new SMSNotificationService();
+        Employee employee2 = new Employee("Gunjan", smsService);
+        employee2.requestBonus();
     }
 }

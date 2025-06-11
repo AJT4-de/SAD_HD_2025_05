@@ -1,38 +1,78 @@
 package SOLID;
-
+ 
 public class DIP_01 {
-
-    /*
-     * TASK:
-     * The Switch is violating the DIP (Dependency Inversion Principle).
-     * Please fix this!
-     */
-    
-    public static class LightBulb {
+ 
+    // Dependency Inversion Principle (DIP) Example
+    public interface Switchable {
+        void turnOn();
+        void turnOff();
+        boolean isOn();
+    }
+ 
+    public static class LightBulb implements Switchable {
+        private boolean on = false;
+        @Override
         public void turnOn() {
-            System.out.println("Light is ON!");
+            on = true;
+            System.out.println("LightBulb: Light is ON!");
         }
+        @Override
         public void turnOff() {
-            System.out.println("Light is OFF!");
+            on = false;
+            System.out.println("LightBulb: Light is OFF!");
+        }
+        @Override
+        public boolean isOn() {
+            return on;
         }
     }
-
+ 
+    public static class Fan implements Switchable {
+        private boolean on = false;
+        @Override
+        public void turnOn() {
+            on = true;
+            System.out.println("Fan: Fan is ON!");
+        }
+        @Override
+        public void turnOff() {
+            on = false;
+            System.out.println("Fan: Fan is OFF!");
+        }
+         @Override
+        public boolean isOn() {
+            return on;
+        }
+    }
+ 
     public static class Switch {
-        private LightBulb lightBulb;
-
-        // this is "Dependency Injection" (composition style)
-        public Switch(LightBulb lightBulb) {
-            this.lightBulb = lightBulb;
+        private Switchable device; 
+ 
+        public Switch(Switchable device) {
+            this.device = device;
         }
-
+ 
         public void operate() {
-            lightBulb.turnOn();
+            if (device.isOn()) {
+                device.turnOff();
+            } else {
+                device.turnOn();
+            }
         }
     }
-
+ 
     public static void main(String[] args) {
-        LightBulb lightBulb = new LightBulb();
+        Switchable lightBulb = new LightBulb(); 
         Switch lightSwitch = new Switch(lightBulb);
-        lightSwitch.operate();
+ 
+        System.out.println("Operating light switch:TEST");
+        lightSwitch.operate(); // Turns ON
+        lightSwitch.operate(); // Turns OFF
+ 
+        System.out.println("\nOperating fan switch:TEST");
+        Switchable fan = new Fan(); 
+        Switch fanSwitch = new Switch(fan);
+        fanSwitch.operate();   // Turns ON
+        fanSwitch.operate();   // Turns OFF
     }
 }

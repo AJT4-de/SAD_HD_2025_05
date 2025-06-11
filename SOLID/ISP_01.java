@@ -1,39 +1,56 @@
 package SOLID;
-
-public class ISP_01 {
-
-    /*
-     * TASK:
-     * This SimplePrinter is not a multi functional printer but a very
-     * simple one.
-     * Please fix this to obey the ISP (Interface Segregation Principle)!
-     */
-    
-    public static interface Printer {
+ 
+public class ISP_01_Fixed {
+ 
+    // Interface Segregation Principle (ISP) Example
+    public interface Printable {
         void printDocument();
-        void scanDocument();
-        void faxDocument();    
     }
-
-    public static class SimplePrinter implements Printer {
+ 
+   
+    public interface Scannable {
+        void scanDocument();
+    }
+ 
+    
+    public interface Faxable {
+        void faxDocument();
+    }
+ 
+    public static class SimplePrinter implements Printable {
         @Override
         public void printDocument() {
-            System.out.println("Sending document to the printer ...");
+            System.out.println("SimplePrinter: Sending document to the printer ...");
         }
-
+    }
+ 
+    // A multi-functional printer can implement multiple interfaces
+    public static class MultiFunctionPrinter implements Printable, Scannable, Faxable {
+        @Override
+        public void printDocument() {
+            System.out.println("MultiFunctionPrinter: Printing document...");
+        }
+ 
         @Override
         public void scanDocument() {
-            throw new UnsupportedOperationException("Unimplemented method 'scanDocument'");
+            System.out.println("MultiFunctionPrinter: Scanning document...");
         }
-
+ 
         @Override
         public void faxDocument() {
-            throw new UnsupportedOperationException("Unimplemented method 'faxDocument'");
-        }        
+            System.out.println("MultiFunctionPrinter: Faxing document...");
+        }
     }
-
+ 
     public static void main(String[] args) {
-        SimplePrinter printer = new SimplePrinter();
-        printer.printDocument();
+        SimplePrinter simplePrinter = new SimplePrinter();
+        simplePrinter.printDocument();
+ 
+        System.out.println("---");
+ 
+        MultiFunctionPrinter mfp = new MultiFunctionPrinter();
+        mfp.printDocument();
+        mfp.scanDocument();
+        mfp.faxDocument();
     }
 }

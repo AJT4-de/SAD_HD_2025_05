@@ -1,48 +1,48 @@
 package SOLID;
-
+ 
 public class ISP_02 {
-    
-    /*
-     * TASK:
-     * Again, some classes are more simple than other.
-     * Fix this without violating the ISP (Interface Segregation Principle)!
-     */
-    public static interface Worker {
+    // Interface Segregation Principle (ISP) Example
+    public interface Workable {
         void work();
-        void rest();        
     }
-
-    public static class Developer implements Worker {
+ 
+    public interface Restable {
+        void rest();
+    }
+ 
+    public static class Developer implements Workable, Restable {
         @Override
         public void work() {
             System.out.println("Developer is coding ...");
         }
-
+ 
         @Override
         public void rest() {
-            System.out.println("Developer is making a break!");
+            System.out.println("Developer is taking a break!");
         }
     }
 
-    public static class Robot implements Worker {
+    public static class Robot implements Workable {
         @Override
         public void work() {
-            System.out.println("Robot is working hard ...");
+            System.out.println("Robot is weorking hard");
         }
-
-        @Override
-        public void rest() {
-            throw new UnsupportedOperationException("Robot does not need a break!");
-        }        
+       
     }
-
-    public static void workingCycle(Worker worker) {
+ 
+    public static void manageWorker(Workable worker) {
         worker.work();
-        worker.rest();
+        if (worker instanceof Restable) 
+            ((Restable) worker).rest();
+        } else {
+            System.out.println("This worker (" + worker.getClass().getSimpleName() + ") does not need to rest or cannot rest.");
+        }
     }
-
+ 
     public static void main(String[] args) {
-        workingCycle( new Developer() );
-        workingCycle( new Robot() );        
+        System.out.println("--- Developer Cycle ---");
+        manageWorker(new Developer());
+ 
+        System.out.println("\n--- Robot Cycle ---");
+        manageWorker(new Robot());
     }
-}
